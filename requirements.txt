@@ -1,3 +1,4 @@
-pyaudio
+scipy
 numpy
 matplotlib
+librosa
