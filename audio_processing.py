@@ -3,71 +3,71 @@ import matplotlib.pyplot as plt
 import numpy as np
 import librosa
 
-# Đọc file âm thanh WAV
-file_path = '/home/domanhcuong/development/python/python_audio_sample.wav'  # Đường dẫn tuyệt đối
+# Read WAV audio file
+file_path = '/home/domanhcuong/development/python/python_audio_sample.wav'  # Absolute path
 fs, data = wavfile.read(file_path)
 
-# Kiểm tra số kênh của file âm thanh
+# Check number of channels of audio file
 if data.ndim == 1:
     num_channels = 1
-    print("File này có 1 kênh (Mono)")
+    print("This file has 1 channel (Mono)")
 else:
     num_channels = data.shape[1]
-    print(f"File này có {num_channels} kênh")
+    print(f"This file has {num_channels} channels")
 
-# Trường hợp file WAV có nhiều kênh (ví dụ stereo)
+# Case file WAV has more than 1 channel (example stereo)
 if num_channels > 1:
-    # Tách dữ liệu của từng kênh (kênh trái và kênh phải)
-    channel_1 = data[:, 0]  # Kênh trái
-    channel_2 = data[:, 1]  # Kênh phải
+    # Split data of each channel (left and right channel)
+    channel_1 = data[:, 0]  # Left channel
+    channel_2 = data[:, 1]  # Right channel
     
-    # Tạo trục thời gian
+    # Create time axis
     num_samples = len(channel_1)
     time = np.linspace(0, num_samples / fs, num=num_samples)
     
-    # Vẽ tín hiệu của từng kênh
+    # Draw audio signal for each channel
     plt.figure(figsize=(12, 8))
     
     plt.subplot(2, 1, 1)
     plt.plot(time, channel_1)
-    plt.title('Kênh trái')
-    plt.xlabel('Thời gian (giây)')
-    plt.ylabel('Biên độ')
+    plt.title('Left Channel')
+    plt.xlabel('Time (s)')
+    plt.ylabel('Amplitude')
     
     plt.subplot(2, 1, 2)
     plt.plot(time, channel_2)
-    plt.title('Kênh phải')
-    plt.xlabel('Thời gian (giây)')
-    plt.ylabel('Biên độ')
+    plt.title('Right Channel')
+    plt.xlabel('Time (s)')
+    plt.ylabel('Amplitude')
 
     plt.tight_layout()
     plt.show()
 else:
-    # Vẽ tín hiệu âm thanh nếu chỉ có 1 kênh
+    # Draw audio signal for mono channel
     time = np.linspace(0, len(data) / fs, num=len(data))
     plt.figure(figsize=(15, 7))
     plt.plot(time, data)
-    plt.title('Tín hiệu âm thanh (Mono)')
-    plt.xlabel('Thời gian (giây)')
-    plt.ylabel('Biên độ')
+    plt.title('Audio Signal (Mono)')
+    plt.xlabel('Time (s)')
+    plt.ylabel('Amplitude')
     plt.text(0.5, -0.1, f'Sample Rate (fs): {fs} Hz', ha='center', va='center', transform=plt.gca().transAxes)
     #plt.show()
-    plt.savefig('audio_signal_sample.png')
+    plt.savefig('audio_signal.png')
 
 
 y, sr = librosa.load(file_path, sr=None)
 f0, voiced_flag, voiced_probs = librosa.pyin(y, fmin=librosa.note_to_hz('C2'), fmax=librosa.note_to_hz('C7'))
 
-# Lấy giá trị tần số cơ bản trung bình
+# Average fundamental frequency
 f0_mean = np.nanmean(f0)
 
-# Vẽ đồ thị tần số cơ bản
+# Draw fundamental frequency graph
 times = librosa.times_like(f0)
 plt.figure(figsize=(15, 7))
-plt.plot(times, f0, label='Tần số cơ bản (f0)', color='r')
-plt.xlabel('Thời gian (s)')
-plt.ylabel('Tần số (Hz)')
-plt.title('Tần số cơ bản của giọng nói')
+plt.plot(times, f0, label='Fundamental Frequency (f0)', color='r')
+plt.xlabel('Time (s)')
+plt.ylabel('Frequency (Hz)')
+plt.title('Fundamental Frequency of Speech')
 plt.legend()
 plt.text(0.5, -0.1, f'Average Fundamental Frequency (f0): {f0_mean:.2f} Hz', ha='center', va='center', transform=plt.gca().transAxes)
-plt.savefig('audio_f0_sample.png')
+plt.savefig('audio_f0.png')
