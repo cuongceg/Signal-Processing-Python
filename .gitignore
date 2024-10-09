@@ -1,0 +1,6 @@
+a.out
+project1
+project1.cpp
+
+# Ignore setting of local ide
+.vscode
